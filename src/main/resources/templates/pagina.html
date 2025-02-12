@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surpresa Romântica 💖</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #ffdde1;
+            color: #d6336c;
+            padding: 20px;
+        }
+        .mensagem {
+            font-size: 1.5em;
+            margin: 20px auto;
+            max-width: 600px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        audio {
+            margin-top: 20px;
+        }
+        .contador {
+            font-size: 1.2em;
+            margin-top: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+<h1>💖 Para Você, Meu Amor 💖</h1>
+
+<div class="mensagem">
+    <p th:text="${mensagem}"></p>
+</div>
+
+<img th:src="${imagem}" alt="Imagem escolhida">
+
+<div class="contador">
+    ❤️ Nossa história começou há <span id="contador"></span> dias! ❤️
+</div>
+
+<audio controls autoplay>
+    <source th:src="${musica}" type="audio/mp3">
+    Seu navegador não suporta áudio.
+</audio>
+
+<script>
+    function calcularDias(desde) {
+        const inicio = new Date(desde);
+        const hoje = new Date();
+        const diferenca = Math.floor((hoje - inicio) / (1000 * 60 * 60 * 24));
+        document.getElementById("contador").textContent = diferenca;
+    }
+    calcularDias("[[${data}]]");
+</script>
+</body>
+</html>

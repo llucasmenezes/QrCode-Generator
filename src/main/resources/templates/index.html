@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalizar Mensagem</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffdde1;
+            color: #d6336c;
+            padding: 20px;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            max-width: 400px;
+            margin: auto;
+        }
+        input, textarea, button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #d6336c;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #d6336c;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>Personalize Sua Mensagem 💖</h1>
+
+<form id="personalizarForm">
+    <label>Mensagem:</label>
+    <textarea id="mensagem" name="mensagem" rows="4" placeholder="Digite sua mensagem"></textarea>
+
+    <label>Data especial:</label>
+    <input type="date" id="dataEspecial" name="data">
+
+    <label>Escolha uma imagem (arquivo):</label>
+    <input type="file" id="imagem" name="imagem">
+
+    <label>Escolha uma música (URL MP3):</label>
+    <input type="text" id="musica" name="musica" placeholder="Cole o link da música">
+
+    <button type="button" onclick="gerarQRCode()">Gerar QR Code</button>
+</form>
+
+<div id="qrCodeContainer" style="margin-top: 20px;"></div>
+
+<script>
+    async function gerarQRCode() {
+        const mensagem = document.getElementById("mensagem").value;
+        const data = document.getElementById("dataEspecial").value;
+        const imagem = document.getElementById("imagem").files[0]; // pegando o arquivo da imagem
+        const musica = document.getElementById("musica").value;
+
+        const formData = new FormData();
+        formData.append("mensagem", mensagem);
+        formData.append("data", data);
+        formData.append("imagem", imagem);
+        formData.append("musica", musica);
+
+        try {
+            const response = await fetch("/qrcode/gerar", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                const qrCodeImg = document.createElement("img");
+                qrCodeImg.src = url;
+                document.getElementById("qrCodeContainer").innerHTML = "";
+                document.getElementById("qrCodeContainer").appendChild(qrCodeImg);
+            } else {
+                console.error("Erro ao gerar QR Code:", response.status);
+            }
+        } catch (error) {
+            console.error("Erro ao enviar requisição:", error);
+        }
+    }
+</script>
+</body>
+</html>
